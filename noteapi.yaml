@@ -1,0 +1,194 @@
+openapi: 3.0.0
+info: 
+  title: NoteApp Api
+  version: 1.0.0
+  description: ''
+tags: 
+ - name : Note
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /notes:
+    get:
+      summary: Retrieve All Notes
+      operationId: getAllNotes
+      tags:
+        - Note
+      responses:
+        '200': 
+          description: Notes successfully retrieved
+          content:
+            application/json:
+              schema: 
+                type: object
+                $ref: '#/components/schemas/GetNotesResponse'
+
+    post:
+      summary: Add new note
+      operationId: addNote
+      tags:
+        - Note
+      requestBody:
+        description: Add new note
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNoteModel'
+      responses:
+        '201':
+          description: Note created
+          content:
+            application/json:
+              schema:  
+                type: 
+                $ref: '#/components/schemas/GetNoteResponse'
+            
+      
+  /notes/{noteId}:
+    get: 
+      summary: Retrieve a single noteId
+      operationId: getNoteById
+      tags:
+        - Note
+      parameters:
+        - name: noteId
+          in: path
+          description: Note ID
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Note successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/GetNoteResponse'
+
+    patch:
+      summary: Update new note
+      operationId: updateNote
+      tags:
+        - Note
+      parameters:
+        - name: noteId
+          in: path
+          description: Note ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update new note
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateNoteModel'
+
+      responses:
+        '201':
+          description: Note updated
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/GetNoteResponse'
+
+    delete:
+      summary: Delete new note
+      operationId: deleteNoteById
+      tags:
+        - Note
+      parameters:
+        - name: noteId
+          in: path
+          description: Note ID
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '201':
+          description: Note deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/BaseResponse'
+
+components:
+  schemas:
+    BaseResponse:
+      type: object
+      properties:
+        status: 
+          type: string
+        message: 
+          type: string
+
+    GetNoteResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        data: 
+          $ref: '#/components/schemas/NoteModel'
+          
+    GetNotesResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        data: 
+          type: array
+          items:
+            $ref: '#/components/schemas/NoteModel'
+
+
+        
+    NoteModel:
+      type: object
+      properties:
+        id:
+          type: string
+        title: 
+          type: string
+        description: 
+          type: string
+        createdAt: 
+          type: string
+          format: date
+        updatedAt: 
+          type: string
+          format: date
+
+    CreateNoteModel:
+      type: object
+      properties:
+        title: 
+          type: string
+        description: 
+          type: string
+      required:
+        - title
+        - description
+
+    UpdateNoteModel:
+      type: object
+      properties:
+        id:
+          type: string
+        title: 
+          type: string
+        description: 
+          type: string
+      required:
+        - id
+        - title
+        - description
